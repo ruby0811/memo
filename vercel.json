@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "my-memo-app/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "my-memo-app/public/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/my-memo-app/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/my-memo-app/public/$1"
+    }
+  ]
+}

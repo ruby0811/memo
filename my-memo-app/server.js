@@ -7,11 +7,12 @@ app.use(bodyParser.json());
 app.use(express.static('public')); // Serve frontend
 
 // Initialize SQLite DB
-const db = new sqlite3.Database('./memo.db', (err) => {
+const dbPath = process.env.VERCEL ? '/tmp/memo.db' : './memo.db';
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error("Database connection error:", err.message);
     } else {
-        console.log("Connected to the SQLite database.");
+        console.log("Connected to the SQLite database at", dbPath);
     }
 });
 
@@ -48,5 +49,9 @@ app.delete('/api/delete', (req, res) => {
     });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}
+
+module.exports = app;
